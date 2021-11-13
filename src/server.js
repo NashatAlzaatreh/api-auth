@@ -8,6 +8,8 @@ const errorHandler = require("./handlers/500");
 const stamper = require("./middleware/stamper");
 const logger = require("./middleware/logger");
 const validator = require("./middleware/validator");
+const clothesRouter = require("./routes/clothes.route");
+const foodRouter = require("./routes/food.route");
 
 app.get("/", (req, res) => {
   res
@@ -34,9 +36,13 @@ app.get("/data", stamper, (req, res) => {
 app.get("/bad", (req, res, next) => {
   throw new Error("You made an Error 🚫❌");
 });
-
-app.use("*", notFound);
 app.use(logger);
+app.use(express.json());
+
+// to make our clothes routers usable, use the people route with express
+app.use(clothesRouter); // use the clothes routes
+app.use(foodRouter);
+app.use("*", notFound);
 app.use(errorHandler);
 
 function start() {
